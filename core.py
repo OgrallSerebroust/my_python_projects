@@ -1,6 +1,7 @@
 from anytree import Node
 
 def Make_start_word(our_rules, all_keys, our_start_word, complete_start_word):
+    a = 0
     new_tamplate = ""
     for i in our_start_word:
         if i in all_keys:
@@ -9,7 +10,13 @@ def Make_start_word(our_rules, all_keys, our_start_word, complete_start_word):
     complete_start_word = new_tamplate
     for i in new_tamplate:
         if i in all_keys:
-            Make_start_word(our_rules, all_keys, new_tamplate, complete_start_word)
+            a += 1
+    if a != 0:
+        for i in new_tamplate:
+            if i in all_keys:
+                Make_start_word(our_rules, all_keys, new_tamplate, complete_start_word)
+    else:
+        Make_tree_of_good_words(complete_start_word)
 
 def Make_tree_of_good_words(complete_start_word):
     print(complete_start_word)
@@ -49,6 +56,5 @@ while rule != "":
 our_start_word = our_rules[str(all_keys[0])]
 complete_start_word = ""
 Make_start_word(our_rules, all_keys, our_start_word, complete_start_word)
-print(complete_start_word)
 
 #Make_tree_of_good_words(our_rules, all_keys, can_be_neterminals, our_chain)
