@@ -1,15 +1,18 @@
 from anytree import Node
 
-def Make_tree_of_good_words(our_rules, all_keys):
-    our_chain = our_rules[str(all_keys[0])]
+def Make_tree_of_good_words(our_rules, all_keys, can_be_neterminals , our_chain):
     new_our_chain = ""
+    can_be_neterminals = True
     for i in our_chain: 
         if i in all_keys:
             i = our_rules[str(i)]
+            can_be_neterminals = False
             print(i)
         new_our_chain += i
     print(new_our_chain)
-first_or_second = False
+    if can_be_neterminals == False:
+        Make_tree_of_good_words(our_rules, all_keys, can_be_neterminals, new_our_chain)
+first_or_second, can_be_neterminals = False, False
 key_list, value_list, all_keys = [], [], []
 our_rules = {}
 key, value = "", ""
@@ -41,4 +44,5 @@ while rule != "":
     key_list, value_list = [], []
     key, value = "", ""
     rule = str(input("\nПожалуйста, следуйте примеру 'S --> Aa'.\n\n"))
-Make_tree_of_good_words(our_rules, all_keys)
+our_chain = our_rules[str(all_keys[0])]
+Make_tree_of_good_words(our_rules, all_keys, can_be_neterminals, our_chain)
