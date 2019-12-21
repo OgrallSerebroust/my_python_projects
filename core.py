@@ -1,16 +1,17 @@
 from anytree import Node
 
-def Make_start_word(our_rules, all_keys, our_start_word, complete_start_word):
-    new_tamplate = ""
+def Make_start_word(our_rules, all_keys):
+    our_start_word = our_rules[str(all_keys[0])]
+    our_start_word_list = []
     for i in our_start_word:
-        if i in all_keys:
-            i = our_rules[str(i)]
-        new_tamplate += i
-    complete_start_word = new_tamplate
-    for i in new_tamplate:
-        if i in all_keys:
-            Make_start_word(our_rules, all_keys, new_tamplate, complete_start_word)
-
+        our_start_word_list.append(i)
+    for i in range(len(our_start_word_list)):
+        if our_start_word_list[i] in all_keys:
+            print(our_start_word_list[i])
+            print(our_rules)
+            our_start_word_list[i] = our_rules[str(all_keys[all_keys.index(our_start_word_list[i])])]
+    print(our_start_word_list)
+        
 def Make_tree_of_good_words(complete_start_word):
     print(complete_start_word)
    
@@ -46,9 +47,4 @@ while rule != "":
     key_list, value_list = [], []
     key, value = "", ""
     rule = str(input("\nПожалуйста, следуйте примеру 'S --> Aa'.\n\n"))
-our_start_word = our_rules[str(all_keys[0])]
-complete_start_word = ""
-Make_start_word(our_rules, all_keys, our_start_word, complete_start_word)
-print(complete_start_word)
-
-#Make_tree_of_good_words(our_rules, all_keys, can_be_neterminals, our_chain)
+Make_start_word(our_rules, all_keys)
