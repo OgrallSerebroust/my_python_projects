@@ -1,5 +1,16 @@
+from anytree import Node
+
+def Make_tree_of_good_words(our_rules, all_keys):
+    our_chain = our_rules[str(all_keys[0])]
+    new_our_chain = ""
+    for i in our_chain: 
+        if i in all_keys:
+            i = our_rules[str(i)]
+            print(i)
+        new_our_chain += i
+    print(new_our_chain)
 first_or_second = False
-key_list, value_list = [], []
+key_list, value_list, all_keys = [], [], []
 our_rules = {}
 key, value = "", ""
 print("Дорогой пользователь, пожалуйста, задайте грамматику G...\n")
@@ -11,7 +22,7 @@ for i in range(int(len(count_of_terminals) / 2)):
     count_of_terminals.remove(" ")
 print(count_of_neterminals, count_of_terminals)
 print("Теперь можно задать правила грамматики(Чтобы прекратить введите пустую строку)\n")
-rule = str(input("Пожалуйста, следуйте примеру 'S --> Aa'.\n"))
+rule = str(input("Пожалуйста, следуйте примеру 'S --> Aa'.\n\n"))
 while rule != "":
     for i in rule:
         if i != " " and i != "-" and i != ">" and first_or_second == False:
@@ -20,15 +31,14 @@ while rule != "":
             first_or_second = True
         if i != " " and i != "-" and i != ">" and first_or_second == True:
             value_list.append(i)
-    print(key_list, value_list)
     for i in range(len(key_list)):
         key += key_list[i]
     for i in range(len(value_list)):
         value += value_list[i]
-    print(key, value)
+    all_keys.append(key)
     our_rules.update({key:value})
-    print(our_rules)
     first_or_second = False
     key_list, value_list = [], []
     key, value = "", ""
-    rule = str(input("Пожалуйста, следуйте примеру 'S --> Aa'.\n"))
+    rule = str(input("\nПожалуйста, следуйте примеру 'S --> Aa'.\n\n"))
+Make_tree_of_good_words(our_rules, all_keys)
