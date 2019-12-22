@@ -1,4 +1,4 @@
-from anytree import Node
+from anytree import Node, RenderTree
 
 def Make_start_word(our_rules, all_keys, our_start_word, complete_start_word):
     a = 0
@@ -19,21 +19,26 @@ def Make_start_word(our_rules, all_keys, our_start_word, complete_start_word):
         Make_tree_of_good_words(complete_start_word)
 
 def Make_tree_of_good_words(complete_start_word):
-    print(complete_start_word)
+    main_node = Node(complete_start_word)
+    second_node = Node("test_node", parent = main_node)
+    for pre, fill, node in RenderTree(main_node):
+        print("%s%s" % (pre, node.name))
    
 can_be_neterminals, first_or_second, false_rule = False, False, False
 key_list, value_list, all_keys = [], [], []
 our_rules = {}
 key, value = "", ""
-print("Дорогой пользователь, пожалуйста, задайте грамматику G...\n")
+print("Дорогой пользователь, пожалуйста, задайте грамматику G...")
 count_of_neterminals = list(input("Для этого задайте нетерминалы грамматики(ОБЯЗАТЕЛЕН К ЗАДАНИЮ S!): "))
 for i in range(int(len(count_of_neterminals) / 2)):
     count_of_neterminals.remove(" ")
 count_of_terminals = list(input("Кроме этого, не забудьте задать терминалы грамматики: "))
 for i in range(int(len(count_of_terminals) / 2)):
     count_of_terminals.remove(" ")
-print(count_of_neterminals, count_of_terminals)
-print("Теперь можно задать правила грамматики(Чтобы прекратить введите пустую строку)\n")
+print("Исходя из введённых вами данных, вот список нетерминалов, которые могут быть использованны для задания правил:", end = " ")
+for i in range(len(count_of_neterminals)):
+    print(count_of_neterminals[i], end = " ")
+print("\nТеперь можно задать правила грамматики(Чтобы прекратить введите пустую строку)\n")
 rule = str(input("Пожалуйста, следуйте примеру 'S --> Aa'.\n\n"))
 while rule != "":
     for i in rule:
@@ -62,7 +67,6 @@ while rule != "":
     rule = str(input("\nПожалуйста, следуйте примеру 'S --> Aa'.\n\n"))
 our_start_word = our_rules[str(all_keys[0])]
 complete_start_word = ""
-print(all_keys)
 Make_start_word(our_rules, all_keys, our_start_word, complete_start_word)
 
 #Make_tree_of_good_words(our_rules, all_keys, can_be_neterminals, our_chain)
