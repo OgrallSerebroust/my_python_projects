@@ -21,7 +21,7 @@ def Make_start_word(our_rules, all_keys, our_start_word, complete_start_word):
 def Make_tree_of_good_words(complete_start_word):
     print(complete_start_word)
    
-first_or_second, can_be_neterminals = False, False
+can_be_neterminals, first_or_second, false_rule = False, False, False
 key_list, value_list, all_keys = [], [], []
 our_rules = {}
 key, value = "", ""
@@ -38,16 +38,23 @@ rule = str(input("Пожалуйста, следуйте примеру 'S --> A
 while rule != "":
     for i in rule:
         if i != " " and i != "-" and i != ">" and first_or_second == False:
-            key_list.append(i)
-        if i == ">":
+            if count_of_neterminals.count(i) == 1:
+                false_rule = False
+                key_list.append(i)
+            elif count_of_neterminals.count(i) == 0:
+                print("\nВы ввели правила, для необъявленного нетерминала грамматики!\n")
+                false_rule = True
+        if i == ">": 
             first_or_second = True
-        if i != " " and i != "-" and i != ">" and first_or_second == True:
+        if i != " " and i != "-" and i != ">" and first_or_second == True and false_rule == False:
             value_list.append(i)
+        false_rule = False
     for i in range(len(key_list)):
         key += key_list[i]
     for i in range(len(value_list)):
         value += value_list[i]
-    all_keys.append(key)
+    if key != '':
+        all_keys.append(key)
     our_rules.update({key:value})
     first_or_second = False
     key_list, value_list = [], []
@@ -55,6 +62,7 @@ while rule != "":
     rule = str(input("\nПожалуйста, следуйте примеру 'S --> Aa'.\n\n"))
 our_start_word = our_rules[str(all_keys[0])]
 complete_start_word = ""
+print(all_keys)
 Make_start_word(our_rules, all_keys, our_start_word, complete_start_word)
 
 #Make_tree_of_good_words(our_rules, all_keys, can_be_neterminals, our_chain)
