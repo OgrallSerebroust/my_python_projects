@@ -1,0 +1,10 @@
+for i in range(0, 40000):
+	index_of_random_top_pointer = np.random.randint(0, 4)
+	random_top_pointer = mass_with_all_main_pointers_coordinates[index_of_random_top_pointer]
+	#random_top_pointer = [mass_with_x_coordinates_for_main_points[index_of_random_top_pointer], mass_with_y_coordinates_for_main_points[index_of_random_top_pointer]]
+	B1 = np.array([[(random_top_pointer[0] + B0[0])/2], [(random_top_pointer[1] + B0[1]) / 2], [(random_top_pointer[2] + B0[2]) / 2]])
+	list_with_all_our_pointers.append(B1)
+	#axes.scatter(B1[0], B1[1], B1[2], s = 1, c = "#0000FF")
+	B0 = B1
+for mass in range(0, 100):
+		list_with_xs_for_plot_from_list_with_all_our_pointers.append(list_with_all_our_pointers[mass][0])
