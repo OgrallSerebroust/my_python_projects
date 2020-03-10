@@ -1,6 +1,6 @@
 import sys
-#import youtube_dl
-from pytube import YouTube
+import youtube_dl
+#from pytube import YouTube
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QHBoxLayout, QVBoxLayout, QFileDialog
 from PyQt5.QtGui import QIcon
 
@@ -42,9 +42,10 @@ class Our_gui(QWidget):
     def Confirm_downloading(self):
         our_youtube_link, our_completed_destination = self.our_link.text(), self.our_destination.text()
         if(our_youtube_link):
-            yt = YouTube(our_youtube_link)
-            stream = yt.streams.first()
-            stream.download(our_completed_destination)
+            Location = '%s \%(extractor)s-%(id)s-%(title)s.%(ext)s'.replace("%s ", our_completed_destination)
+            ytdl_format_options = {'outtmpl': Location, "format": "best"}
+            with youtube_dl.YoutubeDL(ytdl_format_options) as ydl:
+                ydl.download([our_youtube_link])
 if __name__ == "__main__":
     our_gui_application = QApplication(sys.argv)
     program = Our_gui()
