@@ -51,10 +51,17 @@ class Our_gui(QWidget):
 
     def Complete_downloading(self, our_completed_destination):
         os.chdir("media/video/")
-        video = VideoFileClip(os.listdir()[1])
-        audio = AudioFileClip(os.listdir()[0])
+        file_0_size = os.path.getsize(os.listdir()[0])
+        file_1_size = os.path.getsize(os.listdir()[1])
+        if file_1_size > file_0_size:
+            video = VideoFileClip(os.listdir()[1])
+            audio = AudioFileClip(os.listdir()[0])
+        elif file_0_size > file_1_size:
+            video = VideoFileClip(os.listdir()[0])
+            audio = AudioFileClip(os.listdir()[1])
         new_video = video.set_audio(audio)
         new_video.write_videofile(our_completed_destination + "/completed.mp4")
+        print(sys.argv)
         os.remove(os.listdir()[1])
         os.remove(os.listdir()[0])
         print("OK!")
