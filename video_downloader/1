@@ -1,2 +1,0 @@
-with youtube_dl.YoutubeDL({"format": "best", 'postprocessors': [{'key': 'FFmpegExtractVideo', 'preferredcodec': 'mp4', 'preferredquality': "1080"}]}) as ydl:
-                ydl.download(["https://www.youtube.com/watch?v=hn3wJ1_1Zsg"])
