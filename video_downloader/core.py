@@ -3,7 +3,8 @@ import youtube_dl
 import os
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QHBoxLayout, QVBoxLayout, QFileDialog
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QPalette, QColor
+from PyQt5.QtCore import Qt
 
 class Our_gui(QWidget):
     def __init__(self):
@@ -11,6 +12,45 @@ class Our_gui(QWidget):
         self.initUI()
 
     def initUI(self):
+        stylesheet = '''
+        .QLineEdit
+        {
+            background-color:#FFF;
+            color:#8E8E8E;
+        }
+        
+        .QLabel
+        {
+            color:#FFF;
+            font:14pt;
+        }
+        
+        .QLineEdit
+        {
+            color:#666;
+            background-color:#000;
+            border:2px solid #666;
+            font:10pt;
+            padding:2px;
+        }
+        
+        .QPushButton
+        {
+            background-color:#666;
+            color:#FFF;
+            font:14pt;
+        }
+        
+        .QPushButton:hover
+        {
+            color:#000;
+        }
+        
+        .QPushButton:focus
+        {
+            background-color:#444;
+        }
+        '''
         label_what_link = QLabel("Please, enter the link of YouTube video: ", self)
         self.our_link = QLineEdit()
         label_of_destination = QLabel("Please, choose the destination of our video...", self)
@@ -32,9 +72,16 @@ class Our_gui(QWidget):
         vbox.addLayout(hbox_1)
         vbox.addLayout(hbox_2)
         vbox.addLayout(hbox_3)
+        palette = QPalette()
+        palette.setColor(QPalette.Window, QColor("#000000"))
+        self.setPalette(palette)
         self.setLayout(vbox)
         self.setWindowTitle("YouTube video downloader")
         self.setWindowIcon(QIcon("media/img/window_icon_V1.png"))
+        self.setWindowFlags(Qt.WindowCloseButtonHint)
+        self.setStyleSheet(stylesheet)
+        self.setFixedSize(800, 150)
+        self.our_link.setFocus(True)
 
     def Browse_of_destination(self):
         name_of_destination = QFileDialog.getExistingDirectory(None, "Select the destination", "\home")
@@ -61,10 +108,8 @@ class Our_gui(QWidget):
             audio = AudioFileClip(os.listdir()[1])
         new_video = video.set_audio(audio)
         new_video.write_videofile(our_completed_destination + "/completed.mp4")
-        print(sys.argv)
         os.remove(os.listdir()[1])
         os.remove(os.listdir()[0])
-        print("OK!")
         
 if __name__ == "__main__":
     our_gui_application = QApplication(sys.argv)
