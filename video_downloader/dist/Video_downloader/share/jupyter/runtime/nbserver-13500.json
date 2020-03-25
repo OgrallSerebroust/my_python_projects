@@ -1,0 +1,11 @@
+{
+  "base_url": "/",
+  "hostname": "localhost",
+  "notebook_dir": "D:\\reposites\\my_python_projects",
+  "password": false,
+  "pid": 13500,
+  "port": 8888,
+  "secure": false,
+  "token": "7a6b5b4162a069a2a61fe0ee67713f4f30cddb6880a4c04a",
+  "url": "http://localhost:8888/"
+}
