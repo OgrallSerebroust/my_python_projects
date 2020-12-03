@@ -1,2 +1,0 @@
-kernel.py
-pause
