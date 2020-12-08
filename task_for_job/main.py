@@ -45,24 +45,17 @@ if __name__ == '__main__':
 
     def file_creator_function(name_for_creating, email_for_creating, time_for_creating, company_for_creating, completed_tasks_for_creating, not_completed_tasks_for_creating):
         try:
-            try:
-                creating_process(name_for_creating, email_for_creating, time_for_creating, company_for_creating,
-                                 completed_tasks_for_creating, not_completed_tasks_for_creating)
-            except IOError:
-                print(
-                    "Обнаружена ошибка доступа к файлам!\nСкрипт удалит директорию!\nПожалуйста, перезапустите скрипт после устранения неполадок.\n")
-                rmtree("tasks/", ignore_errors=True)
-                creating_process(name_for_creating, email_for_creating, time_for_creating, company_for_creating,
-                                 completed_tasks_for_creating, not_completed_tasks_for_creating)
-                raise SystemExit()
+            creating_process(name_for_creating, email_for_creating, time_for_creating, company_for_creating,
+                             completed_tasks_for_creating, not_completed_tasks_for_creating)
         except FileNotFoundError:
-            try:
-                mkdir("tasks/")
-            except IOError:
-                print(
-                    "Обнаружена ошибка доступа к файлам!\nСкрипт удалит директорию!\nПожалуйста, перезапустите скрипт после устранения неполадок.\n")
-                rmtree("tasks/", ignore_errors=True)
-                raise SystemExit()
+            mkdir("tasks/")
+            creating_process(name_for_creating, email_for_creating, time_for_creating, company_for_creating,
+                             completed_tasks_for_creating, not_completed_tasks_for_creating)
+        except IOError:
+            print(
+                "Обнаружена ошибка доступа к файлам!\nСкрипт удалит директорию!\nПожалуйста, перезапустите скрипт после устранения неполадок.\n")
+            rmtree("tasks/", ignore_errors=True)
+            raise SystemExit()
 
     def make_file_about_person(name, email, time, company, completed_tasks, not_completed_tasks):
         if path.exists("tasks/" + str(name) + ".txt"):
@@ -70,12 +63,17 @@ if __name__ == '__main__':
                 with open("tasks/" + str(name) + ".txt", "r", encoding="utf-8") as old_file:
                     name_mail_and_time_line = old_file.readline()
                     where_was_create_old_file = name_mail_and_time_line.split()[-2::]
-                rename("tasks/" + str(name) + ".txt",
-                       "tasks/" + str(name) + "_" + str(where_was_create_old_file[0].split(".")[2]) + "-" + str(
-                           where_was_create_old_file[0].split(".")[1]) + "-" + str(
-                           where_was_create_old_file[0].split(".")[0]) + "T" + str(
-                           where_was_create_old_file[1].split(":")[0]) + "-" + str(
-                           where_was_create_old_file[1].split(":")[1]) + ".txt")
+                try:
+                    rename("tasks/" + str(name) + ".txt",
+                           "tasks/" + str(name) + "_" + str(where_was_create_old_file[0].split(".")[2]) + "-" + str(
+                               where_was_create_old_file[0].split(".")[1]) + "-" + str(
+                               where_was_create_old_file[0].split(".")[0]) + "T" + str(
+                               where_was_create_old_file[1].split(":")[0]) + "-" + str(
+                               where_was_create_old_file[1].split(":")[1]) + ".txt")
+                except FileExistsError:
+                    print(
+                        "Слишком частые попытки изменения данных в отчёте о пользователе!\nПожалуйста, попробуйте через минуту...\n")
+                    raise SystemExit()
                 file_creator_function(name, email, time, company, completed_tasks, not_completed_tasks)
         else:
             file_creator_function(name, email, time, company, completed_tasks, not_completed_tasks)
@@ -110,15 +108,9 @@ if __name__ == '__main__':
                 company_were_user_works = _["company"]["name"]
                 completed_tasks_of_one_user, not_completed_tasks_of_one_user = collecting_information_from_todos_json(
                     user_id)
-                try:
-                    make_file_about_person(name_of_person, email_of_person, time_of_writing_info,
-                                           company_were_user_works, completed_tasks_of_one_user,
-                                           not_completed_tasks_of_one_user)
-                except :
-                    #
-                    make_file_about_person(name_of_person, email_of_person, time_of_writing_info,
-                                           company_were_user_works, completed_tasks_of_one_user,
-                                           not_completed_tasks_of_one_user)
+                make_file_about_person(name_of_person, email_of_person, time_of_writing_info,
+                                       company_were_user_works, completed_tasks_of_one_user,
+                                       not_completed_tasks_of_one_user)
             except KeyError:
                 users_data_without_full_info_set += 1
 
