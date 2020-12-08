@@ -40,13 +40,10 @@ class MainPartOfQrsMakingModule(QMainWindow):
         """
         palette = QPalette()
         palette.setColor(QPalette.Window, QColor("#000000"))
-        fot_id = QFontDatabase.addApplicationFont("Oxanium-Medium.ttf")
-        font_str = QFontDatabase.applicationFontFamilies(fot_id)[0]
-        font = QFont(font_str, 14)
         self.main_part_of_qrs_making_module = OtherPartsOfQrsMakingModule(parent=self)
         self.setCentralWidget(self.main_part_of_qrs_making_module)
         self.setPalette(palette)
-        self.setFont(QFont(font))
+        self.setFont(QFont("Oxanium-Medium", 14))
         self.setWindowTitle("QR coder")
         self.setStyleSheet(stylesheet)
 
@@ -86,7 +83,7 @@ class OtherPartsOfQrsMakingModule(QWidget):
         text_for_qr_code = self.editline_for_importing_text_for_qr.text()
         if text_for_qr_code != '':
             generated_qr_code = pyqrcode.create(text_for_qr_code)
-            url_to_place_with_generated_qr_code = "media/"
+            url_to_place_with_generated_qr_code = "/media/qr_codes/"
             name_of_generated_qr_code = url_to_place_with_generated_qr_code + text_for_qr_code + ".png"
             generated_qr_code.png(name_of_generated_qr_code, scale=10)
             pixmap = QPixmap(name_of_generated_qr_code)
