@@ -57,6 +57,8 @@ if __name__ == '__main__':
                            where_was_create_old_file[1].split(":")[0]) + "-" + str(
                            where_was_create_old_file[1].split(":")[1]) + ".txt")
                 file_creator_function(name, email, time, company, completed_tasks, not_completed_tasks)
+        elif path.exists("tasks/" + str(name) + ".txt"):
+            file_creator_function(name, email, time, company, completed_tasks, not_completed_tasks)
         else:
             file_creator_function(name, email, time, company, completed_tasks, not_completed_tasks)
 
