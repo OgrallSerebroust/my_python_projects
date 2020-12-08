@@ -1,28 +1,28 @@
-from requests import get
+from requests import get, exceptions
 from json import loads
 from os import mkdir, path, rename
 from datetime import datetime
+from shutil import rmtree
 
 if __name__ == '__main__':
     def check_files_is_same(new_name, new_email, new_company, new_completed_tasks, new_not_completed_tasks):
-        old_file = open("tasks/" + str(new_name) + ".txt", "r", encoding="utf-8")
-        name_mail_and_time_line = old_file.readline()
-        email_from_file = name_mail_and_time_line.split()[-3::1][0]
-        name_from_file = str(name_mail_and_time_line.partition(email_from_file)[0][:-1])
-        company_from_file = old_file.readline().rstrip('\n')
-        old_file.readline()
-        i = old_file.readline()
-        completed_tasks_from_file, not_completed_tasks_from_file = [], []
-        while i != '\n':
+        with open("tasks/" + str(new_name) + ".txt", "r", encoding="utf-8") as old_file:
+            name_mail_and_time_line = old_file.readline()
+            email_from_file = name_mail_and_time_line.split()[-3::1][0]
+            name_from_file = str(name_mail_and_time_line.partition(email_from_file)[0][:-1])
+            company_from_file = old_file.readline().rstrip('\n')
+            old_file.readline()
             i = old_file.readline()
-            if i != '\n':
-                completed_tasks_from_file.append(i[:-1])
-        j = old_file.readline()
-        while j != '':
+            completed_tasks_from_file, not_completed_tasks_from_file = [], []
+            while i != '\n':
+                i = old_file.readline()
+                if i != '\n':
+                    completed_tasks_from_file.append(i[:-1])
             j = old_file.readline()
-            if j != '':
-                not_completed_tasks_from_file.append(j[:-1])
-        old_file.close()
+            while j != '':
+                j = old_file.readline()
+                if j != '':
+                    not_completed_tasks_from_file.append(j[:-1])
         temp_completed_tasks_from_file = sorted(completed_tasks_from_file)
         temp_new_completed_tasks = sorted(new_completed_tasks)
         temp_not_completed_tasks_from_file = sorted(not_completed_tasks_from_file)
@@ -33,7 +33,7 @@ if __name__ == '__main__':
         else:
             return False
 
-    def file_creator_function(name_for_creating, email_for_creating, time_for_creating, company_for_creating, completed_tasks_for_creating, not_completed_tasks_for_creating):
+    def creating_process(name_for_creating, email_for_creating, time_for_creating, company_for_creating, completed_tasks_for_creating, not_completed_tasks_for_creating):
         with open("tasks/" + str(name_for_creating) + ".txt", "w", encoding="utf-8") as file_about_person:
             file_about_person.write(
                 name_for_creating + " <" + email_for_creating + "> " + time_for_creating + "\n" + company_for_creating + "\n\n" + "Завершённые задачи:\n")
@@ -42,7 +42,27 @@ if __name__ == '__main__':
             file_about_person.write("\nОставшиеся задачи:\n")
             for j in range(len(not_completed_tasks_for_creating)):
                 file_about_person.write(not_completed_tasks_for_creating[j] + "\n")
-            file_about_person.close()
+
+    def file_creator_function(name_for_creating, email_for_creating, time_for_creating, company_for_creating, completed_tasks_for_creating, not_completed_tasks_for_creating):
+        try:
+            try:
+                creating_process(name_for_creating, email_for_creating, time_for_creating, company_for_creating,
+                                 completed_tasks_for_creating, not_completed_tasks_for_creating)
+            except IOError:
+                print(
+                    "Обнаружена ошибка доступа к файлам!\nСкрипт удалит директорию!\nПожалуйста, перезапустите скрипт после устранения неполадок.\n")
+                rmtree("tasks/", ignore_errors=True)
+                creating_process(name_for_creating, email_for_creating, time_for_creating, company_for_creating,
+                                 completed_tasks_for_creating, not_completed_tasks_for_creating)
+                raise SystemExit()
+        except FileNotFoundError:
+            try:
+                mkdir("tasks/")
+            except IOError:
+                print(
+                    "Обнаружена ошибка доступа к файлам!\nСкрипт удалит директорию!\nПожалуйста, перезапустите скрипт после устранения неполадок.\n")
+                rmtree("tasks/", ignore_errors=True)
+                raise SystemExit()
 
     def make_file_about_person(name, email, time, company, completed_tasks, not_completed_tasks):
         if path.exists("tasks/" + str(name) + ".txt"):
@@ -57,8 +77,6 @@ if __name__ == '__main__':
                            where_was_create_old_file[1].split(":")[0]) + "-" + str(
                            where_was_create_old_file[1].split(":")[1]) + ".txt")
                 file_creator_function(name, email, time, company, completed_tasks, not_completed_tasks)
-        elif path.exists("tasks/" + str(name) + ".txt"):
-            file_creator_function(name, email, time, company, completed_tasks, not_completed_tasks)
         else:
             file_creator_function(name, email, time, company, completed_tasks, not_completed_tasks)
 
@@ -96,22 +114,21 @@ if __name__ == '__main__':
                     make_file_about_person(name_of_person, email_of_person, time_of_writing_info,
                                            company_were_user_works, completed_tasks_of_one_user,
                                            not_completed_tasks_of_one_user)
-                except FileNotFoundError:
-                    mkdir("tasks")
+                except :
+                    #
                     make_file_about_person(name_of_person, email_of_person, time_of_writing_info,
                                            company_were_user_works, completed_tasks_of_one_user,
                                            not_completed_tasks_of_one_user)
             except KeyError:
                 users_data_without_full_info_set += 1
 
-    our_query_for_all_information_from_json = get("https://json.medrating.org/users")
-    our_persons_from_query = loads(our_query_for_all_information_from_json.text)
-    users_data_without_full_info_set = 0
-    collecting_information_from_json(our_persons_from_query)
-    print("К сожалению не все данные были обработаны!\n" + str(
-        users_data_without_full_info_set) + " пользователей имеют неполные данные!")
-    # TODO Предусмотреть возможные сбои в сети или при записи на диск. Не должно быть наполовину сформированных файлов. Либо файл есть и он целиком корректный, либо его нет.
-    # TODO Если по юзеру однажды был создан отчёт, то всегда должен существовать актуальный отчёт без даты в названии. Не должно быть такого, что из-за сбоя в сети или т.п. остались только файлы с датами в названиях.
-    # TODO Если какие-то моменты не обговорены в задаче, то продумайте плюсы и минусы возможных вариантов, и выберите наиболее подходящий на ваш взгляд, чтобы потом можно было обосновать своё решение.
-    # TODO Предусмотреть крайние случаи (у пользователя нет задач, и т.п.).
-    # TODO Программа должна корректно работать на linux (Debian, Ubuntu).
+    try:
+        our_query_for_all_information_from_json = get("https://json.medrating.org/users")
+        our_persons_from_query = loads(our_query_for_all_information_from_json.text)
+        users_data_without_full_info_set = 0
+        collecting_information_from_json(our_persons_from_query)
+        print("К сожалению не все данные были обработаны!\n" + str(
+            users_data_without_full_info_set) + " пользователей имеют неполные данные!")
+    except exceptions.ConnectionError:
+        print("Возникла проблема с подключением к сети!\nПожалуйста попробуйте попытку позже...\n")
+        raise SystemExit(1)
