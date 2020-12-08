@@ -40,7 +40,7 @@ class MainPartOfQrsMakingModule(QMainWindow):
         """
         palette = QPalette()
         palette.setColor(QPalette.Window, QColor("#000000"))
-        fot_id = QFontDatabase.addApplicationFont("../media/oformlenie/fonts/Oxanium-Medium.ttf")
+        fot_id = QFontDatabase.addApplicationFont("Oxanium-Medium.ttf")
         font_str = QFontDatabase.applicationFontFamilies(fot_id)[0]
         font = QFont(font_str, 14)
         self.main_part_of_qrs_making_module = OtherPartsOfQrsMakingModule(parent=self)
