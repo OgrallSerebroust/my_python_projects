@@ -86,7 +86,7 @@ class OtherPartsOfQrsMakingModule(QWidget):
         text_for_qr_code = self.editline_for_importing_text_for_qr.text()
         if text_for_qr_code != '':
             generated_qr_code = pyqrcode.create(text_for_qr_code)
-            url_to_place_with_generated_qr_code = "../media/qr_codes/"
+            url_to_place_with_generated_qr_code = "media/"
             name_of_generated_qr_code = url_to_place_with_generated_qr_code + text_for_qr_code + ".png"
             generated_qr_code.png(name_of_generated_qr_code, scale=10)
             pixmap = QPixmap(name_of_generated_qr_code)
