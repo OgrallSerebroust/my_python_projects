@@ -1,0 +1,7 @@
+.idea
+media
+garbage
+__pycache__
+*.h5
+identifier.sqlite
+MainMediaDataStorage.db
